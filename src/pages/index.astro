@@ -6,6 +6,7 @@ import Hero from '../components/Hero.astro';
 import StockCard from '../components/StockCard.astro';
 import Footer from '../components/Footer.astro';
 import ChatWidget from '../components/ChatWidget.astro';
+import ReviewHint from '../components/ReviewHint.astro';
 import inventory from '../data/inventory.json';
 import { withBase } from '../scripts/utils';
 
@@ -40,9 +41,17 @@ const flotaGallery = allCarPhotos.map((file) => {
   <section id="flota" class="section stock" data-speed-enter>
     <div class="container">
       <p class="section-kicker reveal">Unidades disponibles</p>
-      <h2 class="section-title reveal">Flota</h2>
+      <h2 class="section-title reveal">
+        Flota
+        <ReviewHint
+          id="flota-demo"
+          placement="bottom"
+          label="Nota de revisión"
+          text="Los nombres y unidades de esta flota son de demostración para la revisión. En la versión final se publicará el inventario real."
+        />
+      </h2>
       <p class="section-lead reveal">
-        Toda la flota demo con fotos reales convertidas. Consulta fichas sin precios publicados en el sitio.
+        Fotos reales de las unidades. Revisa las fichas sin precios publicados en el sitio.
       </p>
 
       <div class="stock-grid">
@@ -96,7 +105,7 @@ const flotaGallery = allCarPhotos.map((file) => {
         </article>
         <article class="why-item glass reveal">
           <h3>Trato directo</h3>
-          <p>Conversas con personas de la automotora. El asistente IA del sitio es una guía rápida, no un intermediario opaco.</p>
+          <p>Conversas con personas de la automotora. Valentino en el sitio es una guía rápida para orientarte, no un intermediario opaco.</p>
         </article>
         <article class="why-item glass reveal">
           <h3>Respaldo local</h3>
@@ -109,19 +118,26 @@ const flotaGallery = allCarPhotos.map((file) => {
   <section id="asistente" class="section agent" data-speed-enter>
     <div class="container agent__layout">
       <div class="agent__copy reveal">
-        <p class="section-kicker">Asistente IA</p>
-        <h2 class="section-title">Consulta la flota en segundos</h2>
+        <p class="section-kicker">Valentino</p>
+        <h2 class="section-title">
+          Consulta la flota en segundos
+          <ReviewHint
+            id="section-valentino"
+            placement="bottom"
+            label="Nota de revisión"
+            text="Esta sección presenta el chat de demostración para la revisión. No es el canal definitivo de atención al cliente."
+          />
+        </h2>
         <p class="section-lead">
-          Nuestro asistente simulado responde sobre autos disponibles, horarios, ubicación, financiamiento y garantía.
-          Sin registro ni claves: todo corre en el navegador.
+          Pregunta por autos disponibles, horarios, ubicación, financiamiento o garantía. Sin registro: la guía corre en el navegador.
         </p>
         <div class="cta-group" style="margin-top: 1.25rem;">
-          <button class="btn btn-primary" type="button" data-open-chat>Abrir asistente</button>
+          <button class="btn btn-primary" type="button" data-open-chat>Hablar con Valentino</button>
           <a class="btn btn-ghost" href="#contacto">Ir a contacto</a>
         </div>
       </div>
       <div class="agent__panel glass reveal">
-        <p class="agent__panel-title">Prueba rápida</p>
+        <p class="agent__panel-title">Consultas frecuentes</p>
         <div class="agent__chips">
           <button type="button" class="chat-chip" data-open-chat>¿Qué autos tienen?</button>
           <button type="button" class="chat-chip" data-open-chat>Horarios de atención</button>
@@ -129,7 +145,7 @@ const flotaGallery = allCarPhotos.map((file) => {
           <button type="button" class="chat-chip" data-open-chat>Ubicación</button>
         </div>
         <p class="muted" style="margin-top: 1rem; font-size: 0.88rem;">
-          Tip: también puedes usar el botón flotante en cualquier página.
+          También puedes usar el botón Valentino en cualquier página.
         </p>
       </div>
     </div>
@@ -139,7 +155,15 @@ const flotaGallery = allCarPhotos.map((file) => {
     <div class="container">
       <p class="section-kicker reveal">Conversemos</p>
       <h2 class="section-title reveal">Contacto</h2>
-      <p class="section-lead reveal">Datos de demostración para el prototipo público.</p>
+      <p class="section-lead reveal">
+        Datos de contacto para coordinar una visita.
+        <ReviewHint
+          id="contacto-demo"
+          placement="bottom"
+          label="Nota de revisión"
+          text="Los datos de contacto pueden ser de demostración en esta revisión. Confirmar antes de usarlos como referencia definitiva."
+        />
+      </p>
 
       <div class="contact-grid">
         <div class="contact-card glass reveal">

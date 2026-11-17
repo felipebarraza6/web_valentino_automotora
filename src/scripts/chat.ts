@@ -37,7 +37,7 @@ function replyFor(input: string): Msg {
   if (/(hola|buenas|hey|saludos)/.test(q)) {
     return {
       role: 'bot',
-      text: `Hola, soy el asistente de ${company.name}. Puedo ayudarte con la flota, horarios, ubicación, financiamiento y garantía.`,
+      text: `Hola, soy Valentino. Puedo orientarte sobre la flota de ${company.name}, horarios, ubicación, financiamiento y garantía.`,
     };
   }
 
@@ -180,7 +180,7 @@ export function initChatWidget(): void {
     if (log.childElementCount === 0) {
       append({
         role: 'bot',
-        text: `Hola, soy el asistente virtual de ${inventory.company.name}. Pregúntame por la flota o por información de la automotora.`,
+        text: `Hola, soy Valentino. Pregúntame por la flota o por información de ${inventory.company.name}.`,
       });
     }
     input.focus();

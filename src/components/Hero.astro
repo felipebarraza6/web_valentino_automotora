@@ -1,43 +1,63 @@
 ---
-import inventory from '../data/inventory.json';
-import { formatKm, withBase } from '../scripts/utils';
+import fs from 'node:fs';
+import path from 'node:path';
+import { withBase } from '../scripts/utils';
 
 const base = import.meta.env.BASE_URL;
-const featured =
-  inventory.cars.find((c) => c.slug === 'dongfeng-joyear-x5-2019') ?? inventory.cars[0];
-const heroPhoto = featured.images[0];
-const detailHref = withBase(`/auto/${featured.slug}/`, base);
+const carsDir = path.join(process.cwd(), 'public/images/cars');
+const carPhotos = fs
+  .readdirSync(carsDir)
+  .filter((f) => /\.webp$/i.test(f))
+  .sort();
+
+/** Split into strips for opposing marquee motion */
+const stripCount = 3;
+const strips = Array.from({ length: stripCount }, (_, i) =>
+  carPhotos.filter((_, idx) => idx % stripCount === i),
+).map((row) => (row.length ? row : carPhotos.slice(0, 6)));
 ---
 
 <section class="hero" aria-label="Portada Valentino Dolusan">
   <div class="hero__media" aria-hidden="true">
-    <img
-      class="hero__photo"
-      src={withBase(`/images/cars/${heroPhoto}`, base)}
-      alt=""
-      width="1920"
-      height="1080"
-      fetchpriority="high"
-    />
+    <div class="hero__collage">
+      {
+        strips.map((row, rowIndex) => (
+          <div
+            class:list={['hero__strip', rowIndex % 2 === 1 && 'hero__strip--reverse']}
+            style={`--strip-duration: ${48 + rowIndex * 8}s; --strip-offset: ${rowIndex * -6}%`}
+          >
+            <div class="hero__track">
+              {[0, 1].map(() =>
+                row.map((file) => (
+                  <figure class="hero__shot">
+                    <img
+                      src={withBase(`/images/cars/${file}`, base)}
+                      alt=""
+                      width="480"
+                      height="320"
+                      loading={rowIndex === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
+                  </figure>
+                )),
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
     <div class="hero__shade"></div>
-    <canvas class="hero__canvas" id="hero-canvas" data-hero-model="joyear-x5"></canvas>
   </div>
 
   <div class="hero__content container">
-    <img
-      class="hero__logo"
-      src={withBase('/images/brand/logo-valentino.webp', base)}
-      alt="Valentino Dolusan Automotriz"
-      width="280"
-      height="280"
-    />
-    <h1 class="hero__headline">Dongfeng Joyear X5 en flota</h1>
+    <p class="hero__wordmark">Valentino Dolusan</p>
+    <h1 class="hero__headline">Automotriz con flota real</h1>
     <p class="hero__support">
-      SUV {featured.anio} · {formatKm(featured.km)} · foto real de la unidad disponible.
+      Autos usados seleccionados en Santiago. Fotos reales de cada unidad, trato directo y respuesta clara.
     </p>
     <div class="cta-group hero__cta">
-      <a class="btn btn-primary" href={detailHref} data-hero-car-link>Ver Joyear X5</a>
-      <button class="btn btn-ghost" type="button" data-open-chat>Hablar con el asistente</button>
+      <a class="btn btn-primary" href="#flota">Ver flota</a>
+      <button class="btn btn-ghost" type="button" data-open-chat>Hablar con Valentino</button>
     </div>
   </div>
 </section>
@@ -58,76 +78,108 @@ const detailHref = withBase(`/auto/${featured.slug}/`, base);
     z-index: 0;
   }
 
-  .hero__photo {
+  .hero__collage {
+    position: absolute;
+    inset: -8% -4%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.85rem;
+    transform: rotate(-2.5deg) scale(1.08);
+  }
+
+  .hero__strip {
+    overflow: hidden;
+    flex: 0 0 auto;
+    transform: translateX(var(--strip-offset, 0));
+  }
+
+  .hero__track {
+    display: flex;
+    width: max-content;
+    gap: 0.75rem;
+    animation: hero-marquee var(--strip-duration, 52s) linear infinite;
+    will-change: transform;
+  }
+
+  .hero__strip--reverse .hero__track {
+    animation-direction: reverse;
+    animation-duration: calc(var(--strip-duration, 52s) * 1.12);
+  }
+
+  .hero__shot {
+    margin: 0;
+    flex: 0 0 auto;
+    width: min(28vw, 340px);
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  .hero__shot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 45%;
-    filter: saturate(1.06) contrast(1.06);
+    filter: saturate(0.92) contrast(1.05) brightness(0.88);
   }
 
   .hero__shade {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 38%, rgba(0, 0, 0, 0.86) 100%),
-      radial-gradient(ellipse at 72% 42%, rgba(155, 0, 0, 0.28), transparent 55%);
-  }
-
-  .hero__canvas {
-    position: absolute;
-    right: -4%;
-    top: 8%;
-    width: min(52vw, 640px);
-    height: min(70vh, 560px);
-    opacity: 0.9;
+      linear-gradient(180deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.42) 40%, rgba(0, 0, 0, 0.9) 100%),
+      radial-gradient(ellipse at 50% 55%, rgba(155, 0, 0, 0.22), transparent 58%),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, transparent 35%, transparent 65%, rgba(0, 0, 0, 0.5) 100%);
     pointer-events: none;
-    mix-blend-mode: screen;
-    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.45));
   }
 
   .hero__content {
     position: relative;
     z-index: 1;
     display: grid;
-    gap: 1rem;
+    gap: 0.85rem;
     max-width: 720px;
   }
 
-  .hero__logo {
-    width: min(280px, 62vw);
-    height: auto;
-    filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.55));
-    animation: logo-in 1.1s var(--ease-out) both;
+  .hero__wordmark {
+    font-family: var(--font-display);
+    font-size: clamp(1.55rem, 4.2vw, 2.65rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--chrome-1);
+    text-shadow: 0 10px 36px rgba(0, 0, 0, 0.65);
+    animation: rise 1s var(--ease-out) both;
   }
 
   .hero__headline {
-    font-size: clamp(1.85rem, 4.4vw, 3.05rem);
-    max-width: 16ch;
-    text-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
-    animation: rise 1s 0.15s var(--ease-out) both;
+    font-size: clamp(1.35rem, 2.8vw, 1.85rem);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    max-width: 18ch;
+    color: #e8e8e8;
+    text-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+    animation: rise 1s 0.12s var(--ease-out) both;
   }
 
   .hero__support {
-    max-width: 38ch;
-    color: #d7d7d7;
-    font-size: clamp(1rem, 2vw, 1.15rem);
-    animation: rise 1s 0.28s var(--ease-out) both;
+    max-width: 40ch;
+    color: #d0d0d0;
+    font-size: clamp(1rem, 2vw, 1.12rem);
+    animation: rise 1s 0.24s var(--ease-out) both;
   }
 
   .hero__cta {
-    margin-top: 0.5rem;
-    animation: rise 1s 0.4s var(--ease-out) both;
+    margin-top: 0.45rem;
+    animation: rise 1s 0.36s var(--ease-out) both;
   }
 
-  @keyframes logo-in {
+  @keyframes hero-marquee {
     from {
-      opacity: 0;
-      transform: translateY(18px) scale(0.96);
+      transform: translateX(0);
     }
     to {
-      opacity: 1;
-      transform: none;
+      transform: translateX(-50%);
     }
   }
 
@@ -143,17 +195,23 @@ const detailHref = withBase(`/auto/${featured.slug}/`, base);
   }
 
   @media (max-width: 720px) {
-    .hero__canvas {
-      width: min(78vw, 360px);
-      height: min(42vh, 280px);
-      right: -8%;
-      top: 12%;
-      opacity: 0.72;
+    .hero__shot {
+      width: min(58vw, 240px);
+    }
+
+    .hero__collage {
+      gap: 0.55rem;
+      transform: rotate(-1.5deg) scale(1.12);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__logo,
+    .hero__track {
+      animation: none;
+      transform: translateX(-8%);
+    }
+
+    .hero__wordmark,
     .hero__headline,
     .hero__support,
     .hero__cta {
@@ -161,16 +219,3 @@ const detailHref = withBase(`/auto/${featured.slug}/`, base);
     }
   }
 </style>
-
-<script>
-  import { initHero3D } from '../scripts/hero-3d.ts';
-  const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement | null;
-  if (canvas) {
-    const start = () => initHero3D(canvas);
-    if ('requestIdleCallback' in window) {
-      (window as Window & { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(start);
-    } else {
-      setTimeout(start, 400);
-    }
-  }
-</script>

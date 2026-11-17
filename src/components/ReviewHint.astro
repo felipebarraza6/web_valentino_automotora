@@ -1,0 +1,205 @@
+---
+interface Props {
+  id: string;
+  label?: string;
+  text: string;
+  placement?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+const { id, label = 'Nota de revisión', text, placement = 'top' } = Astro.props;
+---
+
+<span class:list={['review-hint', `review-hint--${placement}`]} data-review-hint={id}>
+  <button
+    type="button"
+    class="review-hint__dot"
+    aria-expanded="false"
+    aria-controls={`review-hint-tip-${id}`}
+    title={label}
+  >
+    <span class="sr-only">{label}</span>
+    i
+  </button>
+  <span id={`review-hint-tip-${id}`} class="review-hint__tip" role="tooltip" hidden>
+    <span class="review-hint__label">{label}</span>
+    <span class="review-hint__text">{text}</span>
+    <button type="button" class="review-hint__dismiss" data-review-dismiss aria-label="Cerrar nota">
+      Entendido
+    </button>
+  </span>
+</span>
+
+<style>
+  .review-hint {
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+    margin-left: 0.35rem;
+  }
+
+  .review-hint__dot {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    border: 1px solid rgba(232, 232, 232, 0.35);
+    background: rgba(0, 0, 0, 0.45);
+    color: var(--chrome-2);
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.72;
+    transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .review-hint__dot:hover,
+  .review-hint__dot[aria-expanded='true'] {
+    opacity: 1;
+    border-color: rgba(196, 16, 16, 0.7);
+    color: #fff;
+  }
+
+  .review-hint__tip {
+    position: absolute;
+    z-index: 40;
+    width: min(240px, 70vw);
+    padding: 0.7rem 0.8rem;
+    border-radius: 12px;
+    border: 1px solid rgba(232, 232, 232, 0.22);
+    background: linear-gradient(160deg, rgba(18, 18, 18, 0.96), rgba(50, 0, 0, 0.88));
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .review-hint__tip[hidden] {
+    display: none !important;
+  }
+
+  .review-hint--top .review-hint__tip {
+    bottom: calc(100% + 0.45rem);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .review-hint--bottom .review-hint__tip {
+    top: calc(100% + 0.45rem);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .review-hint--left .review-hint__tip {
+    right: calc(100% + 0.45rem);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .review-hint--right .review-hint__tip {
+    left: calc(100% + 0.45rem);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .review-hint__label {
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red-bright);
+  }
+
+  .review-hint__text {
+    color: #d8d8d8;
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .review-hint__dismiss {
+    justify-self: start;
+    margin-top: 0.15rem;
+    border: 0;
+    background: transparent;
+    color: var(--chrome-2);
+    font-size: 0.72rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'vd-review-hints-dismissed';
+
+  function readDismissed(): Set<string> {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return new Set();
+      return new Set(JSON.parse(raw) as string[]);
+    } catch {
+      return new Set();
+    }
+  }
+
+  function writeDismissed(set: Set<string>) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+  }
+
+  const dismissed = readDismissed();
+
+  document.querySelectorAll<HTMLElement>('[data-review-hint]').forEach((root) => {
+    const id = root.dataset.reviewHint;
+    if (!id) return;
+    if (dismissed.has(id)) {
+      root.hidden = true;
+      return;
+    }
+
+    const dot = root.querySelector<HTMLButtonElement>('.review-hint__dot');
+    const tip = root.querySelector<HTMLElement>('.review-hint__tip');
+    const dismissBtn = root.querySelector<HTMLButtonElement>('[data-review-dismiss]');
+    if (!dot || !tip || !dismissBtn) return;
+
+    const close = () => {
+      tip.hidden = true;
+      dot.setAttribute('aria-expanded', 'false');
+    };
+
+    const open = () => {
+      document.querySelectorAll<HTMLElement>('[data-review-hint] .review-hint__tip').forEach((other) => {
+        if (other !== tip) other.hidden = true;
+      });
+      document.querySelectorAll<HTMLButtonElement>('[data-review-hint] .review-hint__dot').forEach((other) => {
+        if (other !== dot) other.setAttribute('aria-expanded', 'false');
+      });
+      tip.hidden = false;
+      dot.setAttribute('aria-expanded', 'true');
+    };
+
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      tip.hidden ? open() : close();
+    });
+
+    dismissBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dismissed.add(id);
+      writeDismissed(dismissed);
+      root.hidden = true;
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as Node;
+    document.querySelectorAll<HTMLElement>('[data-review-hint]').forEach((root) => {
+      if (root.hidden || root.contains(target)) return;
+      const tip = root.querySelector<HTMLElement>('.review-hint__tip');
+      const dot = root.querySelector<HTMLButtonElement>('.review-hint__dot');
+      if (tip && !tip.hidden) {
+        tip.hidden = true;
+        dot?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+</script>

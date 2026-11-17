@@ -1,17 +1,33 @@
 ---
+import ReviewHint from './ReviewHint.astro';
 ---
 
 <div id="chat-widget" class="chat-widget">
-  <button class="chat-launcher glass" type="button" data-chat-open aria-expanded="false" aria-controls="chat-panel">
-    <span class="chat-launcher__pulse" aria-hidden="true"></span>
-    Asistente IA
-  </button>
+  <div class="chat-launcher-wrap">
+    <button
+      class="chat-launcher glass"
+      type="button"
+      data-chat-open
+      aria-expanded="false"
+      aria-controls="chat-panel"
+    >
+      <span class="chat-launcher__glow" aria-hidden="true"></span>
+      <span class="chat-launcher__pulse" aria-hidden="true"></span>
+      Valentino
+    </button>
+    <ReviewHint
+      id="chat-valentino"
+      placement="left"
+      label="Nota de revisión"
+      text="Valentino es un chat de demostración para esta revisión: responde sobre flota e información de la automotora. En producción se conectaría a un canal real."
+    />
+  </div>
 
-  <section id="chat-panel" class="chat-panel glass" data-chat-panel hidden aria-label="Chat del asistente">
+  <section id="chat-panel" class="chat-panel glass" data-chat-panel hidden aria-label="Chat con Valentino">
     <header class="chat-panel__head">
       <div>
-        <p class="chat-panel__title">Asistente Valentino</p>
-        <p class="chat-panel__sub">Simulación local · flota y FAQ</p>
+        <p class="chat-panel__title">Valentino</p>
+        <p class="chat-panel__sub">Consulta flota e información de la automotora</p>
       </div>
       <button type="button" class="chat-panel__close" data-chat-close aria-label="Cerrar chat">×</button>
     </header>
@@ -19,7 +35,7 @@
     <div class="chat-panel__chips" data-chat-chips></div>
     <form class="chat-panel__form" data-chat-form>
       <label class="sr-only" for="chat-input">Mensaje</label>
-      <input id="chat-input" data-chat-input type="text" placeholder="Escribe tu consulta…" autocomplete="off" />
+      <input id="chat-input" data-chat-input type="text" placeholder="Pregunta por un auto o por la automotora…" autocomplete="off" />
       <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
   </section>
@@ -37,27 +53,48 @@
     gap: 0.75rem;
   }
 
+  .chat-launcher-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
   .chat-launcher {
     position: relative;
     min-height: 52px;
-    padding: 0.85rem 1.2rem;
+    padding: 0.85rem 1.25rem;
     border: 1px solid rgba(232, 232, 232, 0.35);
     border-radius: 999px;
-    background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(80, 0, 0, 0.55));
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.92), rgba(80, 0, 0, 0.58));
     color: #fff;
     font-family: var(--font-display);
     font-size: 0.72rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     cursor: pointer;
+    overflow: visible;
+    animation: launcher-float 3.6s ease-in-out infinite;
+    box-shadow: 0 0 0 0 rgba(196, 16, 16, 0.35);
+  }
+
+  .chat-launcher__glow {
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 50%, rgba(196, 16, 16, 0.35), transparent 68%);
+    opacity: 0.55;
+    animation: launcher-glow 2.8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
   }
 
   .chat-launcher__pulse {
     position: absolute;
     inset: -4px;
     border-radius: inherit;
-    border: 1px solid rgba(196, 16, 16, 0.5);
+    border: 1px solid rgba(196, 16, 16, 0.55);
     animation: pulse 2.4s ease-out infinite;
+    pointer-events: none;
   }
 
   @keyframes pulse {
@@ -66,8 +103,30 @@
       opacity: 0.7;
     }
     100% {
-      transform: scale(1.12);
+      transform: scale(1.14);
       opacity: 0;
+    }
+  }
+
+  @keyframes launcher-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes launcher-glow {
+    0%,
+    100% {
+      opacity: 0.35;
+      filter: blur(2px);
+    }
+    50% {
+      opacity: 0.7;
+      filter: blur(5px);
     }
   }
 
@@ -100,8 +159,9 @@
 
   .chat-panel__title {
     font-family: var(--font-display);
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .chat-panel__sub {
@@ -224,7 +284,9 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .chat-launcher__pulse {
+    .chat-launcher,
+    .chat-launcher__pulse,
+    .chat-launcher__glow {
       animation: none;
     }
   }
