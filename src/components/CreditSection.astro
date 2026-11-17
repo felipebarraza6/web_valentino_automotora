@@ -1,24 +1,10 @@
 ---
 import ReviewHint from './ReviewHint.astro';
+import { COMUNAS_RM } from '../data/comunas';
+import { withBase } from '../scripts/utils';
 
-const comunas = [
-  'Santiago',
-  'Providencia',
-  'Las Condes',
-  'Ñuñoa',
-  'Maipú',
-  'La Florida',
-  'Puente Alto',
-  'San Miguel',
-  'La Reina',
-  'Vitacura',
-  'Independencia',
-  'Recoleta',
-  'Estación Central',
-  'Quilicura',
-  'Huechuraba',
-  'Otra comuna RM',
-];
+const base = import.meta.env.BASE_URL;
+const flotaHref = withBase('/#flota', base);
 ---
 
 <section id="credito" class="section credit" data-speed-enter aria-labelledby="credito-title">
@@ -27,9 +13,9 @@ const comunas = [
     <div class="credit__copy reveal">
       <p class="section-kicker">Financiamiento</p>
       <div class="section-heading">
-        <h2 id="credito-title" class="section-title credit__title">
+        <h1 id="credito-title" class="section-title credit__title">
           Te aprobamos tu crédito automotriz en 5 minutos
-        </h2>
+        </h1>
         <ReviewHint
           id="credito-demo"
           placement="right"
@@ -124,7 +110,7 @@ const comunas = [
             <label for="credito-comuna">Comuna</label>
             <select id="credito-comuna" name="comuna" required>
               <option value="" disabled selected>Selecciona tu comuna</option>
-              {comunas.map((comuna) => <option value={comuna}>{comuna}</option>)}
+              {COMUNAS_RM.map((comuna) => <option value={comuna}>{comuna}</option>)}
             </select>
             <p class="credit-field__error" data-field-error hidden></p>
           </div>
@@ -160,12 +146,12 @@ const comunas = [
         aria-live="polite"
       >
         <p class="credit-success__kicker">Solicitud recibida</p>
-        <h3 class="credit-success__title">Gracias. Te contactamos a la brevedad</h3>
+        <h2 class="credit-success__title">Gracias. Te contactamos a la brevedad</h2>
         <p class="credit-success__text">
           Registramos tu preaprobación de demostración. En la versión final, un ejecutivo confirmaría
           condiciones y siguientes pasos por correo o teléfono.
         </p>
-        <a class="btn btn-ghost" href="#flota">Volver a la flota</a>
+        <a class="btn btn-ghost" href={flotaHref}>Volver a la flota</a>
       </div>
     </div>
   </div>

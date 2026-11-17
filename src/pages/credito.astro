@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CreditSection from '../components/CreditSection.astro';
+import Footer from '../components/Footer.astro';
+import ChatWidget from '../components/ChatWidget.astro';
+---
+
+<BaseLayout
+  title="Crédito automotriz | Valentino Dolusan"
+  description="Simula tu preaprobación de crédito automotriz en Valentino Dolusan. Respuesta demostrativa en minutos."
+>
+  <CreditSection />
+  <Footer slot="footer" />
+  <ChatWidget slot="chat" />
+</BaseLayout>
+
+<style is:global>
+  /* Espacio superior en página dedicada (sin hero de home). */
+  #credito.section {
+    padding-top: calc(var(--nav-h) + 2rem);
+  }
+</style>

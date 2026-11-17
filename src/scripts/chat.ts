@@ -50,7 +50,19 @@ function replyFor(input: string): Msg {
   }
 
   if (/(financi|credito|cuota|pie)/.test(q)) {
-    return { role: 'bot', text: company.financing };
+    return {
+      role: 'bot',
+      html: `${company.financing}<br><br>Puedes simular la preaprobación en <a href="${withBase('/credito/', base)}">Crédito</a>.`,
+      text: company.financing,
+    };
+  }
+
+  if (/(vender|vendo|tasacion|tasar|compra.?tu.?auto)/.test(q)) {
+    return {
+      role: 'bot',
+      html: `Si quieres vender tu auto, completa la solicitud en <a href="${withBase('/vender/', base)}">Vender</a>. Un asesor te orienta con la evaluación.`,
+      text: 'Si quieres vender tu auto, completa la solicitud en la página Vender.',
+    };
   }
 
   if (/(garant|mecanica|falla)/.test(q)) {

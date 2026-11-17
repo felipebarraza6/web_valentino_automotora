@@ -1,4 +1,4 @@
-/** Chilean RUT helpers and simulated credit pre-approval form. */
+/** Chilean RUT helpers and simulated lead forms (crédito / vender). */
 
 export function cleanRut(value: string): string {
   return value.replace(/[^0-9kK]/g, '').toUpperCase();
@@ -35,6 +35,14 @@ export function isValidRut(value: string): boolean {
 
 function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+/** Chilean mobile: 9 digits starting with 9, optional +56 / spaces. */
+export function isValidPhoneCL(value: string): boolean {
+  const digits = value.replace(/\D/g, '');
+  if (digits.length === 9 && digits.startsWith('9')) return true;
+  if (digits.length === 11 && digits.startsWith('569')) return true;
+  return false;
 }
 
 function setFieldError(field: HTMLElement, message: string | null) {
@@ -77,6 +85,28 @@ function validateField(field: HTMLElement): boolean {
     return false;
   }
 
+  if (name === 'telefono' && !isValidPhoneCL(value)) {
+    setFieldError(field, 'Ingresa un celular válido (ej. +56 9 1234 5678).');
+    return false;
+  }
+
+  if (name === 'anio') {
+    const year = Number(value);
+    const max = new Date().getFullYear() + 1;
+    if (!Number.isInteger(year) || year < 1990 || year > max) {
+      setFieldError(field, `Ingresa un año entre 1990 y ${max}.`);
+      return false;
+    }
+  }
+
+  if (name === 'km') {
+    const km = Number(value.replace(/\./g, ''));
+    if (!Number.isFinite(km) || km < 0 || km > 800_000) {
+      setFieldError(field, 'Ingresa un kilometraje válido.');
+      return false;
+    }
+  }
+
   if (name === 'nacimiento') {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
@@ -101,14 +131,33 @@ function validateField(field: HTMLElement): boolean {
   return true;
 }
 
-export function initCreditForm(root: HTMLElement = document): void {
-  const form = root.querySelector<HTMLFormElement>('[data-credit-form]');
+export type SimulatedFormOptions = {
+  formSelector?: string;
+  panelSelector?: string;
+  successSelector?: string;
+  submitSelector?: string;
+  loadingText?: string;
+};
+
+export function initSimulatedForm(
+  root: HTMLElement | Document = document,
+  options: SimulatedFormOptions = {},
+): void {
+  const {
+    formSelector = '[data-credit-form]',
+    panelSelector = '[data-credit-panel]',
+    successSelector = '[data-credit-success]',
+    submitSelector = '[data-credit-submit]',
+    loadingText = 'Evaluando…',
+  } = options;
+
+  const form = root.querySelector<HTMLFormElement>(formSelector);
   if (!form || form.dataset.bound === '1') return;
   form.dataset.bound = '1';
 
-  const panel = form.closest<HTMLElement>('[data-credit-panel]');
-  const success = panel?.querySelector<HTMLElement>('[data-credit-success]');
-  const submitBtn = form.querySelector<HTMLButtonElement>('[data-credit-submit]');
+  const panel = form.closest<HTMLElement>(panelSelector) ?? form.parentElement;
+  const success = panel?.querySelector<HTMLElement>(successSelector);
+  const submitBtn = form.querySelector<HTMLButtonElement>(submitSelector);
   const fields = [...form.querySelectorAll<HTMLElement>('[data-field]')];
   const rutInput = form.querySelector<HTMLInputElement>('input[name="rut"]');
 
@@ -149,10 +198,11 @@ export function initCreditForm(root: HTMLElement = document): void {
       return;
     }
 
+    const originalLabel = submitBtn?.textContent ?? '';
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.dataset.loading = '1';
-      submitBtn.textContent = 'Evaluando…';
+      submitBtn.textContent = loadingText;
     }
 
     await new Promise((resolve) => setTimeout(resolve, 900));
@@ -162,5 +212,31 @@ export function initCreditForm(root: HTMLElement = document): void {
       success.hidden = false;
       success.focus();
     }
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.dataset.loading = '0';
+      submitBtn.textContent = originalLabel;
+    }
+  });
+}
+
+export function initCreditForm(root: HTMLElement | Document = document): void {
+  initSimulatedForm(root, {
+    formSelector: '[data-credit-form]',
+    panelSelector: '[data-credit-panel]',
+    successSelector: '[data-credit-success]',
+    submitSelector: '[data-credit-submit]',
+    loadingText: 'Evaluando…',
+  });
+}
+
+export function initSellForm(root: HTMLElement | Document = document): void {
+  initSimulatedForm(root, {
+    formSelector: '[data-sell-form]',
+    panelSelector: '[data-sell-panel]',
+    successSelector: '[data-sell-success]',
+    submitSelector: '[data-sell-submit]',
+    loadingText: 'Enviando…',
   });
 }

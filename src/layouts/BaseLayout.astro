@@ -47,7 +47,8 @@ const homePath = withBase('/', base).replace(/\/$/, '') || '/';
         </a>
         <nav class="site-nav" aria-label="Principal">
           <a href="#flota" data-nav-section="flota">Flota</a>
-          <a href="#credito" data-nav-section="credito">Crédito</a>
+          <a href={withBase('/vender/', base)}>Vender</a>
+          <a href={withBase('/credito/', base)}>Crédito</a>
           <a href="#por-que" data-nav-section="por-que">Por qué</a>
           <a href="#asistente" data-nav-section="asistente">Valentino</a>
           <a href="#contacto" data-nav-section="contacto">Contacto</a>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SellSection from '../components/SellSection.astro';
+import Footer from '../components/Footer.astro';
+import ChatWidget from '../components/ChatWidget.astro';
+---
+
+<BaseLayout
+  title="Vende tu auto | Valentino Dolusan"
+  description="Cotiza la venta de tu auto usado con Valentino Dolusan. Solicitud demostrativa con respuesta simulada."
+>
+  <SellSection />
+  <Footer slot="footer" />
+  <ChatWidget slot="chat" />
+</BaseLayout>

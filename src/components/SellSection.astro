@@ -1,0 +1,439 @@
+---
+import ReviewHint from './ReviewHint.astro';
+import { COMUNAS_RM } from '../data/comunas';
+import { withBase } from '../scripts/utils';
+
+const base = import.meta.env.BASE_URL;
+const homeHref = withBase('/', base);
+const currentYear = new Date().getFullYear();
+---
+
+<section id="vender" class="sell" data-speed-enter aria-labelledby="vender-title">
+  <header class="sell-hero">
+    <div class="sell-hero__glow" aria-hidden="true"></div>
+    <div class="container sell-hero__inner">
+      <p class="section-kicker reveal">Vende tu auto</p>
+      <div class="section-heading reveal">
+        <h1 id="vender-title" class="sell-hero__title">
+          Cotiza tu usado y recibe una propuesta clara
+        </h1>
+        <ReviewHint
+          id="vender-demo"
+          placement="right"
+          label="Nota de revisión"
+          text="Este formulario simula una solicitud de venta para la revisión del sitio. No envía datos ni genera una tasación real."
+        />
+      </div>
+      <p class="sell-hero__lead reveal">
+        Cuéntanos quién eres y qué auto quieres vender. En la versión final un asesor te contacta
+        con una evaluación orientativa; aquí el envío es solo demostrativo.
+      </p>
+      <ul class="sell-hero__points reveal">
+        <li>Sin compromiso: solo dejas tus datos y los del vehículo.</li>
+        <li>Respuesta simulada al instante en esta demo.</li>
+        <li>Trato directo con Valentino Dolusan en Santiago.</li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="container sell__body">
+    <div class="sell__panel glass reveal" data-sell-panel>
+      <form class="sell-form" data-sell-form novalidate>
+        <p class="sell-form__eyebrow">Solicitud de venta</p>
+        <p class="sell-form__intro">Completa tus datos y los de tu auto. Todos los campos son obligatorios.</p>
+
+        <p class="sell-form__group-title">Tus datos</p>
+        <div class="sell-form__grid">
+          <div class="sell-field" data-field>
+            <label for="vender-nombre">Nombre completo</label>
+            <input
+              id="vender-nombre"
+              name="nombre"
+              type="text"
+              autocomplete="name"
+              placeholder="Ej. Camila Rojas Pérez"
+              required
+            />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-rut">RUT</label>
+            <input
+              id="vender-rut"
+              name="rut"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              placeholder="12.345.678-5"
+              maxlength="12"
+              required
+            />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-nacimiento">Fecha de nacimiento</label>
+            <input id="vender-nacimiento" name="nacimiento" type="date" required />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-email">Correo electrónico</label>
+            <input
+              id="vender-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="nombre@correo.cl"
+              required
+            />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-telefono">Teléfono</label>
+            <input
+              id="vender-telefono"
+              name="telefono"
+              type="tel"
+              autocomplete="tel"
+              inputmode="tel"
+              placeholder="+56 9 1234 5678"
+              required
+            />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-comuna">Comuna</label>
+            <select id="vender-comuna" name="comuna" required>
+              <option value="" disabled selected>Selecciona tu comuna</option>
+              {COMUNAS_RM.map((comuna) => <option value={comuna}>{comuna}</option>)}
+            </select>
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field sell-field--full" data-field>
+            <label for="vender-direccion">Dirección</label>
+            <input
+              id="vender-direccion"
+              name="direccion"
+              type="text"
+              autocomplete="street-address"
+              placeholder="Calle, número, depto u oficina"
+              required
+            />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+        </div>
+
+        <p class="sell-form__group-title">Datos del vehículo</p>
+        <div class="sell-form__grid">
+          <div class="sell-field" data-field>
+            <label for="vender-marca">Marca</label>
+            <input id="vender-marca" name="marca" type="text" placeholder="Ej. Toyota" required />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-modelo">Modelo</label>
+            <input id="vender-modelo" name="modelo" type="text" placeholder="Ej. Corolla" required />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-anio">Año</label>
+            <input
+              id="vender-anio"
+              name="anio"
+              type="number"
+              inputmode="numeric"
+              min="1990"
+              max={currentYear + 1}
+              placeholder={String(currentYear - 5)}
+              required
+            />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+
+          <div class="sell-field" data-field>
+            <label for="vender-km">Kilometraje</label>
+            <input
+              id="vender-km"
+              name="km"
+              type="number"
+              inputmode="numeric"
+              min="0"
+              max="800000"
+              placeholder="85000"
+              required
+            />
+            <p class="sell-field__error" data-field-error hidden></p>
+          </div>
+        </div>
+
+        <button class="btn btn-primary sell-form__submit" type="submit" data-sell-submit>
+          Enviar solicitud de venta
+        </button>
+        <p class="sell-form__note">
+          Al enviar aceptas que un asesor de Valentino Dolusan pueda contactarte. Sin backend real en esta revisión.
+        </p>
+      </form>
+
+      <div
+        class="sell-success"
+        data-sell-success
+        hidden
+        tabindex="-1"
+        role="status"
+        aria-live="polite"
+      >
+        <p class="sell-success__kicker">Solicitud recibida</p>
+        <h2 class="sell-success__title">Gracias. Revisamos tu auto y te contactamos</h2>
+        <p class="sell-success__text">
+          Registramos tu solicitud de venta de demostración. En la versión final, un ejecutivo
+          confirmaría la evaluación y los siguientes pasos.
+        </p>
+        <a class="btn btn-ghost" href={homeHref}>Volver al inicio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sell {
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+  }
+
+  .sell-hero {
+    position: relative;
+    padding: calc(var(--nav-h) + 2.5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+    overflow: hidden;
+  }
+
+  .sell-hero__glow {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(196, 16, 16, 0.32), transparent 55%),
+      radial-gradient(ellipse at 80% 10%, rgba(255, 255, 255, 0.06), transparent 45%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 70%);
+    pointer-events: none;
+  }
+
+  .sell-hero__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+  }
+
+  .sell-hero__title {
+    font-size: clamp(1.85rem, 4.2vw, 2.85rem);
+    max-width: 16ch;
+    background: linear-gradient(120deg, var(--chrome-1), var(--chrome-2) 50%, var(--chrome-3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .sell-hero__lead {
+    color: var(--text-muted);
+    font-size: clamp(1rem, 2vw, 1.12rem);
+    max-width: 48ch;
+    margin-top: 0.35rem;
+  }
+
+  .sell-hero__points {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .sell-hero__points li {
+    position: relative;
+    padding-left: 1.1rem;
+    color: var(--chrome-2);
+    font-size: 0.95rem;
+  }
+
+  .sell-hero__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--red-bright);
+  }
+
+  .sell__body {
+    position: relative;
+    z-index: 1;
+  }
+
+  .sell__panel {
+    padding: clamp(1.25rem, 3vw, 1.85rem);
+    max-width: 760px;
+  }
+
+  .sell-form__eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red-bright);
+    margin-bottom: 0.35rem;
+  }
+
+  .sell-form__intro {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .sell-form__group-title {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--chrome-2);
+    margin: 0.35rem 0 0.85rem;
+  }
+
+  .sell-form__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem 0.85rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .sell-field {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .sell-field--full {
+    grid-column: 1 / -1;
+  }
+
+  .sell-field label {
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--chrome-2);
+  }
+
+  .sell-field input,
+  .sell-field select {
+    width: 100%;
+    min-height: 46px;
+    border-radius: 12px;
+    border: 1px solid rgba(232, 232, 232, 0.22);
+    background: rgba(0, 0, 0, 0.42);
+    padding: 0.65rem 0.85rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .sell-field input::placeholder {
+    color: rgba(168, 168, 168, 0.75);
+  }
+
+  .sell-field select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--chrome-2) 50%),
+      linear-gradient(135deg, var(--chrome-2) 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) calc(50% - 3px),
+      calc(100% - 12px) calc(50% - 3px);
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 2rem;
+  }
+
+  .sell-field input:focus,
+  .sell-field select:focus {
+    outline: none;
+    border-color: rgba(196, 16, 16, 0.75);
+    box-shadow: 0 0 0 3px rgba(196, 16, 16, 0.18);
+  }
+
+  .sell-field.is-invalid input,
+  .sell-field.is-invalid select {
+    border-color: rgba(196, 16, 16, 0.85);
+  }
+
+  .sell-field__error {
+    margin: 0;
+    color: #ffb4b4;
+    font-size: 0.74rem;
+    line-height: 1.35;
+  }
+
+  .sell-form__submit {
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+
+  .sell-form__submit[data-loading='1'] {
+    opacity: 0.85;
+    pointer-events: none;
+  }
+
+  .sell-form__note {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .sell-success {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.35rem 0.15rem;
+  }
+
+  .sell-success[hidden] {
+    display: none !important;
+  }
+
+  .sell-success__kicker {
+    font-family: var(--font-display);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red-bright);
+  }
+
+  .sell-success__title {
+    font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  }
+
+  .sell-success__text {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    max-width: 40ch;
+  }
+
+  .sell-success .btn {
+    justify-self: start;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 720px) {
+    .sell-form__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .sell-hero__title {
+      max-width: none;
+    }
+  }
+</style>
+
+<script>
+  import { initSellForm } from '../scripts/credit-form.ts';
+  initSellForm();
+</script>
