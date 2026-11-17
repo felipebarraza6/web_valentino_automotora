@@ -41,15 +41,15 @@ const flotaGallery = allCarPhotos.map((file) => {
   <section id="flota" class="section stock" data-speed-enter>
     <div class="container">
       <p class="section-kicker reveal">Unidades disponibles</p>
-      <h2 class="section-title reveal">
-        Flota
+      <div class="section-heading reveal">
+        <h2 class="section-title">Flota</h2>
         <ReviewHint
           id="flota-demo"
-          placement="bottom"
+          placement="right"
           label="Nota de revisión"
           text="Los nombres y unidades de esta flota son de demostración para la revisión. En la versión final se publicará el inventario real."
         />
-      </h2>
+      </div>
       <p class="section-lead reveal">
         Fotos reales de las unidades. Revisa las fichas sin precios publicados en el sitio.
       </p>
@@ -119,15 +119,15 @@ const flotaGallery = allCarPhotos.map((file) => {
     <div class="container agent__layout">
       <div class="agent__copy reveal">
         <p class="section-kicker">Valentino</p>
-        <h2 class="section-title">
-          Consulta la flota en segundos
+        <div class="section-heading">
+          <h2 class="section-title">Consulta la flota en segundos</h2>
           <ReviewHint
             id="section-valentino"
-            placement="bottom"
+            placement="right"
             label="Nota de revisión"
             text="Esta sección presenta el chat de demostración para la revisión. No es el canal definitivo de atención al cliente."
           />
-        </h2>
+        </div>
         <p class="section-lead">
           Pregunta por autos disponibles, horarios, ubicación, financiamiento o garantía. Sin registro: la guía corre en el navegador.
         </p>
@@ -155,11 +155,11 @@ const flotaGallery = allCarPhotos.map((file) => {
     <div class="container">
       <p class="section-kicker reveal">Conversemos</p>
       <h2 class="section-title reveal">Contacto</h2>
-      <p class="section-lead reveal">
+      <p class="section-lead reveal section-lead--with-hint">
         Datos de contacto para coordinar una visita.
         <ReviewHint
           id="contacto-demo"
-          placement="bottom"
+          placement="top"
           label="Nota de revisión"
           text="Los datos de contacto pueden ser de demostración en esta revisión. Confirmar antes de usarlos como referencia definitiva."
         />
@@ -196,6 +196,22 @@ const flotaGallery = allCarPhotos.map((file) => {
 </BaseLayout>
 
 <style>
+  .section-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.55rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-heading .section-title {
+    margin-bottom: 0;
+  }
+
+  .section-lead--with-hint :global(.review-hint) {
+    vertical-align: middle;
+  }
+
   .stock-grid {
     margin-top: 2.25rem;
     display: grid;
