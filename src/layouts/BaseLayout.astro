@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import MobileActionBar from '../components/MobileActionBar.astro';
 import { withBase } from '../scripts/utils';
 
 interface Props {
@@ -61,6 +62,7 @@ const homePath = withBase('/', base).replace(/\/$/, '') || '/';
     </main>
 
     <slot name="footer" />
+    <MobileActionBar />
     <slot name="chat" />
 
     <script define:vars={{ homePath, base }}>
