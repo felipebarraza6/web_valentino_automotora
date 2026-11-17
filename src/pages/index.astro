@@ -6,6 +6,7 @@ import Hero from '../components/Hero.astro';
 import StockCard from '../components/StockCard.astro';
 import Footer from '../components/Footer.astro';
 import ChatWidget from '../components/ChatWidget.astro';
+import CreditSection from '../components/CreditSection.astro';
 import ReviewHint from '../components/ReviewHint.astro';
 import inventory from '../data/inventory.json';
 import { withBase } from '../scripts/utils';
@@ -92,6 +93,8 @@ const flotaGallery = allCarPhotos.map((file) => {
       </div>
     </div>
   </section>
+
+  <CreditSection />
 
   <section id="por-que" class="section why" data-speed-enter>
     <div class="container">
@@ -196,18 +199,6 @@ const flotaGallery = allCarPhotos.map((file) => {
 </BaseLayout>
 
 <style>
-  .section-heading {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.45rem 0.55rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .section-heading .section-title {
-    margin-bottom: 0;
-  }
-
   .section-lead--with-hint :global(.review-hint) {
     vertical-align: middle;
   }
