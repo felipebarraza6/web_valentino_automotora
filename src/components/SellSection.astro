@@ -9,12 +9,12 @@ const currentYear = new Date().getFullYear();
 ---
 
 <section id="vender" class="sell" data-speed-enter aria-labelledby="vender-title">
-  <header class="sell-hero">
-    <div class="sell-hero__glow" aria-hidden="true"></div>
-    <div class="container sell-hero__inner">
-      <p class="section-kicker reveal">Vende tu auto</p>
-      <div class="section-heading reveal">
-        <h1 id="vender-title" class="sell-hero__title">
+  <div class="sell__glow" aria-hidden="true"></div>
+  <div class="container sell__layout">
+    <div class="sell__copy reveal">
+      <p class="section-kicker">Vende tu auto</p>
+      <div class="section-heading">
+        <h1 id="vender-title" class="sell__title">
           Cotiza tu usado y recibe una propuesta clara
         </h1>
         <ReviewHint
@@ -24,19 +24,17 @@ const currentYear = new Date().getFullYear();
           text="Este formulario simula una solicitud de venta para la revisión del sitio. No envía datos ni genera una tasación real."
         />
       </div>
-      <p class="sell-hero__lead reveal">
+      <p class="sell__lead">
         Cuéntanos quién eres y qué auto quieres vender. En la versión final un asesor te contacta
         con una evaluación orientativa; aquí el envío es solo demostrativo.
       </p>
-      <ul class="sell-hero__points reveal">
+      <ul class="sell__points">
         <li>Sin compromiso: solo dejas tus datos y los del vehículo.</li>
         <li>Respuesta simulada al instante en esta demo.</li>
         <li>Trato directo con Valentino Dolusan en Santiago.</li>
       </ul>
     </div>
-  </header>
 
-  <div class="container sell__body">
     <div class="sell__panel glass reveal" data-sell-panel>
       <form class="sell-form" data-sell-form novalidate>
         <p class="sell-form__eyebrow">Solicitud de venta</p>
@@ -203,32 +201,36 @@ const currentYear = new Date().getFullYear();
 
 <style>
   .sell {
-    padding-bottom: clamp(4rem, 8vw, 7rem);
-  }
-
-  .sell-hero {
     position: relative;
-    padding: calc(var(--nav-h) + 2.5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+    padding: calc(var(--nav-h) + 2.5rem) 0 clamp(4rem, 8vw, 7rem);
     overflow: hidden;
   }
 
-  .sell-hero__glow {
+  .sell__glow {
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse at 20% 30%, rgba(196, 16, 16, 0.32), transparent 55%),
-      radial-gradient(ellipse at 80% 10%, rgba(255, 255, 255, 0.06), transparent 45%),
+      radial-gradient(ellipse at 18% 28%, rgba(196, 16, 16, 0.32), transparent 55%),
+      radial-gradient(ellipse at 82% 12%, rgba(255, 255, 255, 0.06), transparent 45%),
       linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 70%);
     pointer-events: none;
+    z-index: 0;
   }
 
-  .sell-hero__inner {
+  .sell__layout {
     position: relative;
     z-index: 1;
-    max-width: 720px;
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: clamp(1.5rem, 4vw, 2.75rem);
+    align-items: start;
   }
 
-  .sell-hero__title {
+  .sell__copy {
+    padding-top: 0.35rem;
+  }
+
+  .sell__title {
     font-size: clamp(1.85rem, 4.2vw, 2.85rem);
     max-width: 16ch;
     background: linear-gradient(120deg, var(--chrome-1), var(--chrome-2) 50%, var(--chrome-3));
@@ -237,14 +239,14 @@ const currentYear = new Date().getFullYear();
     color: transparent;
   }
 
-  .sell-hero__lead {
+  .sell__lead {
     color: var(--text-muted);
     font-size: clamp(1rem, 2vw, 1.12rem);
     max-width: 48ch;
     margin-top: 0.35rem;
   }
 
-  .sell-hero__points {
+  .sell__points {
     list-style: none;
     margin: 1.5rem 0 0;
     padding: 0;
@@ -252,14 +254,14 @@ const currentYear = new Date().getFullYear();
     gap: 0.55rem;
   }
 
-  .sell-hero__points li {
+  .sell__points li {
     position: relative;
     padding-left: 1.1rem;
     color: var(--chrome-2);
     font-size: 0.95rem;
   }
 
-  .sell-hero__points li::before {
+  .sell__points li::before {
     content: '';
     position: absolute;
     left: 0;
@@ -270,14 +272,8 @@ const currentYear = new Date().getFullYear();
     background: var(--red-bright);
   }
 
-  .sell__body {
-    position: relative;
-    z-index: 1;
-  }
-
   .sell__panel {
     padding: clamp(1.25rem, 3vw, 1.85rem);
-    max-width: 760px;
   }
 
   .sell-form__eyebrow {
@@ -422,12 +418,13 @@ const currentYear = new Date().getFullYear();
     margin-top: 0.5rem;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 900px) {
+    .sell__layout,
     .sell-form__grid {
       grid-template-columns: 1fr;
     }
 
-    .sell-hero__title {
+    .sell__title {
       max-width: none;
     }
   }
