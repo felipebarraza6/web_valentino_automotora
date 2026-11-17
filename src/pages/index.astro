@@ -1,0 +1,243 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import StockCard from '../components/StockCard.astro';
+import Footer from '../components/Footer.astro';
+import ChatWidget from '../components/ChatWidget.astro';
+import inventory from '../data/inventory.json';
+
+const base = import.meta.env.BASE_URL;
+const cars = inventory.cars.filter((c) => c.destacado);
+const { company } = inventory;
+---
+
+<BaseLayout title="Valentino Dolusan Automotriz | Autos usados">
+  <Hero />
+
+  <section id="stock" class="section stock" data-speed-enter>
+    <div class="container">
+      <p class="section-kicker reveal">Inventario demo</p>
+      <h2 class="section-title reveal">Stock destacado</h2>
+      <p class="section-lead reveal">
+        Unidades seleccionadas con fotos reales. Precios y fichas de demostración para este prototipo.
+      </p>
+      <div class="stock-grid">
+        {
+          cars.map((car) => (
+            <div class="reveal">
+              <StockCard
+                slug={car.slug}
+                marca={car.marca}
+                modelo={car.modelo}
+                anio={car.anio}
+                km={car.km}
+                precio={car.precio}
+                transmision={car.transmision}
+                image={car.images[0]}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section id="por-que" class="section why" data-speed-enter>
+    <div class="container">
+      <p class="section-kicker reveal">Confianza</p>
+      <h2 class="section-title reveal">Por qué Valentino</h2>
+      <p class="section-lead reveal">Tres razones concretas para visitarnos con tranquilidad.</p>
+      <div class="why-grid">
+        <article class="why-item glass reveal">
+          <h3>Selección clara</h3>
+          <p>Publicamos lo esencial de cada unidad: año, kilometraje, transmisión y precio en CLP, sin vueltas.</p>
+        </article>
+        <article class="why-item glass reveal">
+          <h3>Trato directo</h3>
+          <p>Conversas con personas de la automotora. El asistente IA del sitio es una guía rápida, no un intermediario opaco.</p>
+        </article>
+        <article class="why-item glass reveal">
+          <h3>Respaldo local</h3>
+          <p>Estamos en Santiago, con horarios definidos y opciones de financiamiento y garantía según cada vehículo.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="asistente" class="section agent" data-speed-enter>
+    <div class="container agent__layout">
+      <div class="agent__copy reveal">
+        <p class="section-kicker">Asistente IA</p>
+        <h2 class="section-title">Consulta el stock en segundos</h2>
+        <p class="section-lead">
+          Nuestro asistente simulado responde sobre autos disponibles, horarios, ubicación, financiamiento y garantía.
+          Sin registro ni claves: todo corre en el navegador.
+        </p>
+        <div class="cta-group" style="margin-top: 1.25rem;">
+          <button class="btn btn-primary" type="button" data-open-chat>Abrir asistente</button>
+          <a class="btn btn-ghost" href="#contacto">Ir a contacto</a>
+        </div>
+      </div>
+      <div class="agent__panel glass reveal">
+        <p class="agent__panel-title">Prueba rápida</p>
+        <div class="agent__chips">
+          <button type="button" class="chat-chip" data-open-chat>¿Qué autos tienen?</button>
+          <button type="button" class="chat-chip" data-open-chat>Horarios de atención</button>
+          <button type="button" class="chat-chip" data-open-chat>¿Hay financiamiento?</button>
+          <button type="button" class="chat-chip" data-open-chat>Ubicación</button>
+        </div>
+        <p class="muted" style="margin-top: 1rem; font-size: 0.88rem;">
+          Tip: también puedes usar el botón flotante en cualquier página.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="section contact" data-speed-enter>
+    <div class="container">
+      <p class="section-kicker reveal">Conversemos</p>
+      <h2 class="section-title reveal">Contacto</h2>
+      <p class="section-lead reveal">Datos de demostración para el prototipo público.</p>
+
+      <div class="contact-grid">
+        <div class="contact-card glass reveal">
+          <h3>Datos</h3>
+          <ul>
+            <li><strong>Dirección:</strong> {company.address}</li>
+            <li><strong>Teléfono:</strong> {company.phone}</li>
+            <li><strong>Horarios:</strong> {company.hours}</li>
+            <li><strong>Correo:</strong> {company.email}</li>
+          </ul>
+        </div>
+        <div class="contact-card glass reveal">
+          <h3>WhatsApp</h3>
+          <p class="muted">Botón de demostración (no conecta a una API real).</p>
+          <a
+            class="btn btn-primary"
+            href={`https://wa.me/${company.whatsapp.replace('+', '')}?text=${encodeURIComponent('Hola, vi el sitio de Valentino Dolusan y me interesa consultar por un auto.')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Escribir por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+  <ChatWidget slot="chat" />
+</BaseLayout>
+
+<style>
+  .stock-grid {
+    margin-top: 2.25rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.15rem;
+  }
+
+  .why-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .why-item {
+    padding: 1.35rem 1.25rem;
+  }
+
+  .why-item h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .why-item p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .agent__layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+
+  .agent__panel {
+    padding: 1.4rem;
+  }
+
+  .agent__panel-title {
+    font-family: var(--font-display);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    margin-bottom: 1rem;
+    color: var(--chrome-2);
+  }
+
+  .agent__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .agent__chips :global(.chat-chip) {
+    border: 1px solid rgba(232, 232, 232, 0.25);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--chrome-1);
+    border-radius: 999px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+
+  .contact-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 1rem;
+  }
+
+  .contact-card {
+    padding: 1.4rem;
+  }
+
+  .contact-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .contact-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.5rem;
+    display: grid;
+    gap: 0.65rem;
+    color: var(--text-muted);
+  }
+
+  .contact-card strong {
+    color: var(--chrome-1);
+  }
+
+  .contact-card .btn {
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .stock-grid,
+    .why-grid,
+    .agent__layout,
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { initStockTilt } from '../scripts/stock-tilt.ts';
+  initStockTilt();
+</script>

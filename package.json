@@ -1,0 +1,19 @@
+{
+  "name": "web-valentino-automotora",
+  "type": "module",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^7.4.12",
+    "gsap": "^3.13.0",
+    "three": "^0.180.0"
+  }
+}

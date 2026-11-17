@@ -1,0 +1,226 @@
+---
+---
+
+<div id="chat-widget" class="chat-widget">
+  <button class="chat-launcher glass" type="button" data-chat-open aria-expanded="false" aria-controls="chat-panel">
+    <span class="chat-launcher__pulse" aria-hidden="true"></span>
+    Asistente IA
+  </button>
+
+  <section id="chat-panel" class="chat-panel glass" data-chat-panel hidden aria-label="Chat del asistente">
+    <header class="chat-panel__head">
+      <div>
+        <p class="chat-panel__title">Asistente Valentino</p>
+        <p class="chat-panel__sub">Simulación local · stock y FAQ</p>
+      </div>
+      <button type="button" class="chat-panel__close" data-chat-close aria-label="Cerrar chat">×</button>
+    </header>
+    <div class="chat-panel__log" data-chat-log></div>
+    <div class="chat-panel__chips" data-chat-chips></div>
+    <form class="chat-panel__form" data-chat-form>
+      <label class="sr-only" for="chat-input">Mensaje</label>
+      <input id="chat-input" data-chat-input type="text" placeholder="Escribe tu consulta…" autocomplete="off" />
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </section>
+</div>
+
+<style>
+  .chat-widget {
+    position: fixed;
+    right: 1.1rem;
+    bottom: 1.1rem;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .chat-launcher {
+    position: relative;
+    min-height: 52px;
+    padding: 0.85rem 1.2rem;
+    border: 1px solid rgba(232, 232, 232, 0.35);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.9), rgba(80, 0, 0, 0.55));
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .chat-launcher__pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    border: 1px solid rgba(196, 16, 16, 0.5);
+    animation: pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1.12);
+      opacity: 0;
+    }
+  }
+
+  .chat-panel {
+    width: min(360px, calc(100vw - 1.5rem));
+    height: min(520px, calc(100vh - 6rem));
+    display: flex;
+    flex-direction: column;
+    padding: 0.9rem;
+    background: linear-gradient(160deg, rgba(18, 18, 18, 0.95), rgba(40, 0, 0, 0.72));
+  }
+
+  .chat-panel__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .chat-panel__title {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+  }
+
+  .chat-panel__sub {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
+  .chat-panel__close {
+    border: 0;
+    background: transparent;
+    color: var(--chrome-2);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .chat-panel__log {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding-right: 0.25rem;
+  }
+
+  :global(.chat-bubble) {
+    max-width: 92%;
+    padding: 0.7rem 0.85rem;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  :global(.chat-bubble--bot) {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  :global(.chat-bubble--user) {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--red-bright), var(--red-deep));
+  }
+
+  :global(.chat-bubble a) {
+    color: #ffd0d0;
+    text-decoration: underline;
+  }
+
+  :global(.chat-typing) {
+    display: inline-flex;
+    gap: 0.3rem;
+    align-items: center;
+  }
+
+  :global(.chat-typing span) {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--chrome-2);
+    animation: typing 1s infinite ease-in-out;
+  }
+
+  :global(.chat-typing span:nth-child(2)) {
+    animation-delay: 0.15s;
+  }
+  :global(.chat-typing span:nth-child(3)) {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes typing {
+    0%,
+    100% {
+      opacity: 0.3;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-3px);
+    }
+  }
+
+  .chat-panel__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.65rem 0;
+  }
+
+  :global(.chat-chip) {
+    border: 1px solid rgba(232, 232, 232, 0.25);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--chrome-1);
+    border-radius: 999px;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.72rem;
+    cursor: pointer;
+  }
+
+  :global(.chat-chip:hover) {
+    border-color: rgba(196, 16, 16, 0.7);
+  }
+
+  .chat-panel__form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.45rem;
+  }
+
+  .chat-panel__form input {
+    border-radius: 999px;
+    border: 1px solid rgba(232, 232, 232, 0.25);
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.7rem 0.95rem;
+  }
+
+  .chat-panel__form .btn {
+    min-height: 44px;
+    padding-inline: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chat-launcher__pulse {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { initChatWidget } from '../scripts/chat.ts';
+  initChatWidget();
+</script>

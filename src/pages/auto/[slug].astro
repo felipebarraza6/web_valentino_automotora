@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Footer from '../../components/Footer.astro';
+import ChatWidget from '../../components/ChatWidget.astro';
+import inventory from '../../data/inventory.json';
+import { formatCLP, formatKm } from '../../scripts/utils';
+
+export function getStaticPaths() {
+  return inventory.cars.map((car) => ({
+    params: { slug: car.slug },
+    props: { car },
+  }));
+}
+
+const { car } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const title = `${car.marca} ${car.modelo} ${car.anio} | Valentino Dolusan`;
+---
+
+<BaseLayout title={title} description={car.descripcion}>
+  <article class="detail">
+    <div class="detail__hero">
+      <img
+        src={`${base}images/cars/${car.images[0]}`}
+        alt={`${car.marca} ${car.modelo}`}
+        width="1200"
+        height="800"
+        fetchpriority="high"
+      />
+      <div class="detail__hero-shade"></div>
+    </div>
+
+    <div class="container detail__content">
+      <a class="detail__back" href={`${base}#stock`}>← Volver al stock</a>
+      <p class="section-kicker">Ficha demo</p>
+      <h1 class="detail__title">{car.marca} {car.modelo}</h1>
+      <p class="detail__sub">{car.anio} · {formatKm(car.km)} · {car.transmision} · {car.combustible} · {car.color}</p>
+      <p class="price detail__price">{formatCLP(car.precio)}</p>
+      <p class="detail__desc">{car.descripcion}</p>
+
+      <div class="cta-group" style="margin-top: 1.5rem;">
+        <button class="btn btn-primary" type="button" data-open-chat>Consultar al asistente</button>
+        <a class="btn btn-ghost" href={`${base}#contacto`}>Contacto</a>
+      </div>
+
+      {
+        car.images.length > 1 && (
+          <div class="detail__gallery">
+            <h2>Galería</h2>
+            <div class="detail__thumbs">
+              {car.images.map((img, i) => (
+                <figure class="glass">
+                  <img
+                    src={`${base}images/cars/${img}`}
+                    alt={`${car.marca} ${car.modelo} — foto ${i + 1}`}
+                    loading="lazy"
+                    width="640"
+                    height="480"
+                  />
+                </figure>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+  <ChatWidget slot="chat" />
+</BaseLayout>
+
+<style>
+  .detail__hero {
+    position: relative;
+    height: min(58vh, 520px);
+    overflow: hidden;
+  }
+
+  .detail__hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .detail__hero-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(5, 5, 5, 0.95));
+  }
+
+  .detail__content {
+    position: relative;
+    margin-top: -4rem;
+    padding-bottom: 4rem;
+  }
+
+  .detail__back {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .detail__title {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .detail__sub {
+    color: var(--text-muted);
+  }
+
+  .detail__price {
+    margin-top: 1rem;
+    font-size: 1.45rem;
+  }
+
+  .detail__desc {
+    margin-top: 1rem;
+    max-width: 48rem;
+    color: #d4d4d4;
+  }
+
+  .detail__gallery {
+    margin-top: 3rem;
+  }
+
+  .detail__gallery h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .detail__thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .detail__thumbs figure {
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .detail__thumbs img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+  }
+
+  @media (max-width: 720px) {
+    .detail__thumbs {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

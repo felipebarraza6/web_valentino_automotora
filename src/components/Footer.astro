@@ -1,0 +1,51 @@
+---
+import inventory from '../data/inventory.json';
+const base = import.meta.env.BASE_URL;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <img src={`${base}images/brand/logo-valentino.webp`} alt="" width="56" height="56" />
+      <div>
+        <p class="site-footer__name">{inventory.company.name}</p>
+        <p class="muted">{inventory.company.tagline}</p>
+      </div>
+    </div>
+    <p class="muted site-footer__copy">© {year} Valentino Dolusan Automotriz · Prototipo demo</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 2.5rem 0;
+    background: #030303;
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .site-footer__brand {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+  }
+
+  .site-footer__name {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .site-footer__copy {
+    font-size: 0.85rem;
+  }
+</style>

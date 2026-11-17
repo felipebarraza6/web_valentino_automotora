@@ -1,0 +1,66 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'Valentino Dolusan Automotriz', description = 'Compra y venta de autos usados en Chile. Stock seleccionado y asesoría personalizada.' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="es-CL">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050505" />
+    <link rel="icon" type="image/jpeg" href={`${base}images/brand/logo-valentino.jpg`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Orbitron:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="page-wipe" id="page-wipe" aria-hidden="true">
+      <div class="page-wipe__panel"></div>
+      <div class="page-wipe__lines">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="brand-lockup" href={base} aria-label="Valentino Dolusan Automotriz — inicio">
+          <img src={`${base}images/brand/logo-valentino.webp`} alt="" width="48" height="48" />
+          <span>Valentino Dolusan</span>
+        </a>
+        <nav class="site-nav" aria-label="Principal">
+          <a href={`${base}#stock`}>Stock</a>
+          <a href={`${base}#por-que`}>Por qué</a>
+          <a href={`${base}#asistente`}>Asistente</a>
+          <a href={`${base}#contacto`}>Contacto</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <slot name="footer" />
+    <slot name="chat" />
+
+    <script>
+      import { initPageTransitions } from '../scripts/page-transitions.ts';
+      import { initScrollReveals } from '../scripts/gsap-init.ts';
+      initPageTransitions();
+      initScrollReveals();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,143 @@
+{
+  "company": {
+    "name": "Valentino Dolusan Automotriz",
+    "tagline": "Compra y venta de autos usados",
+    "address": "Av. Libertador Bernardo O'Higgins 2450, Local 3, Santiago",
+    "phone": "+56 9 8765 4321",
+    "whatsapp": "+56987654321",
+    "email": "contacto@valentinodolusan.cl",
+    "hours": "Lun–Sáb 10:00–19:00 · Dom 11:00–15:00",
+    "financing": "Financiamiento convenido con entidades financieras. Evaluamos tu pie y cuotas según tu perfil.",
+    "warranty": "Garantía mecánica de 3 meses o 5.000 km en motor y caja (lo que ocurra primero), según vehículo."
+  },
+  "cars": [
+    {
+      "slug": "dongfeng-joyear-x5-2019",
+      "marca": "Dongfeng",
+      "modelo": "Joyear X5",
+      "anio": 2019,
+      "km": 78500,
+      "precio": 8990000,
+      "transmision": "Automática",
+      "combustible": "Bencina",
+      "color": "Blanco",
+      "destacado": true,
+      "descripcion": "SUV familiar en excelente estado, ideal para ciudad y carretera. Mantenciones al día y listo para entregar.",
+      "images": [
+        "1000365615.webp",
+        "1000365676.webp",
+        "1000365614.webp",
+        "1000365620.webp"
+      ]
+    },
+    {
+      "slug": "dongfeng-mpv-g10-2018",
+      "marca": "Dongfeng",
+      "modelo": "MPV Familiar",
+      "anio": 2018,
+      "km": 112000,
+      "precio": 7490000,
+      "transmision": "Manual",
+      "combustible": "Bencina",
+      "color": "Blanco",
+      "destacado": true,
+      "descripcion": "Van/MPV espaciosa para familia o trabajo. Amplio interior y buen rendimiento en ruta.",
+      "images": [
+        "1000365617.webp",
+        "1000365616.webp",
+        "1000365618.webp",
+        "1000365619.webp",
+        "1000365621.webp"
+      ]
+    },
+    {
+      "slug": "peugeot-208-2021",
+      "marca": "Peugeot",
+      "modelo": "208",
+      "anio": 2021,
+      "km": 45200,
+      "precio": 10990000,
+      "transmision": "Automática",
+      "combustible": "Bencina",
+      "color": "Blanco",
+      "destacado": true,
+      "descripcion": "Hatchback moderno, económico y con bajo kilometraje. Perfecto para uso diario en Santiago.",
+      "images": [
+        "1000366005.webp",
+        "1000366006.webp",
+        "1000366007.webp",
+        "1000366008.webp"
+      ]
+    },
+    {
+      "slug": "toyota-yaris-2019",
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": 2019,
+      "km": 68400,
+      "precio": 9490000,
+      "transmision": "Automática",
+      "combustible": "Bencina",
+      "color": "Rojo",
+      "destacado": true,
+      "descripcion": "Confiabilidad Toyota en color rojo llamativo. Ideal para quienes buscan seguridad y reventa.",
+      "images": [
+        "1000358553.webp",
+        "1000358554.webp",
+        "1000358541.webp",
+        "1000358542.webp"
+      ]
+    },
+    {
+      "slug": "fiat-fiorino-2017",
+      "marca": "Fiat",
+      "modelo": "Fiorino",
+      "anio": 2017,
+      "km": 145000,
+      "precio": 5990000,
+      "transmision": "Manual",
+      "combustible": "Bencina",
+      "color": "Blanco",
+      "destacado": true,
+      "descripcion": "Utilitaria compacta para trabajo y carga urbana. Económica y fácil de estacionar.",
+      "images": [
+        "1000354510.webp"
+      ]
+    },
+    {
+      "slug": "nissan-pathfinder-2014",
+      "marca": "Nissan",
+      "modelo": "Pathfinder",
+      "anio": 2014,
+      "km": 168000,
+      "precio": 11990000,
+      "transmision": "Automática",
+      "combustible": "Bencina",
+      "color": "Blanco",
+      "destacado": true,
+      "descripcion": "SUV amplia y robusta, pensada para familia y viajes. Equipamiento completo y presencia imponente.",
+      "images": [
+        "1000356095.webp"
+      ]
+    },
+    {
+      "slug": "kia-morning-2020",
+      "marca": "Kia",
+      "modelo": "Morning",
+      "anio": 2020,
+      "km": 52300,
+      "precio": 8290000,
+      "transmision": "Manual",
+      "combustible": "Bencina",
+      "color": "Plata",
+      "destacado": true,
+      "descripcion": "City car ágil y eficiente. Bajo consumo y tamaño ideal para el tráfico capitalino.",
+      "images": [
+        "1000365725.webp",
+        "1000365726.webp",
+        "1000365727.webp",
+        "1000365728.webp"
+      ]
+    }
+  ]
+}
