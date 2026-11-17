@@ -10,8 +10,12 @@ export function formatKm(value: number): string {
   return `${new Intl.NumberFormat('es-CL').format(value)} km`;
 }
 
-export function withBase(path: string, base: string): string {
-  const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
+/** Join Astro `base` with a site path. Keeps a single slash even if base lacks a trailing slash. */
+export function withBase(path: string, base: string = import.meta.env.BASE_URL): string {
+  const cleanBase = base.replace(/\/+$/, '') || '';
+  if (!path || path === '/') return `${cleanBase}/`;
+  // Preserve hash-only anchors like "/#stock"
+  if (path.startsWith('/#')) return `${cleanBase}/${path.slice(1)}`;
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${cleanBase}${cleanPath}`;
 }

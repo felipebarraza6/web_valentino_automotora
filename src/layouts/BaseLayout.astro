@@ -1,13 +1,18 @@
 ---
 import '../styles/global.css';
+import { withBase } from '../scripts/utils';
 
 interface Props {
   title?: string;
   description?: string;
 }
 
-const { title = 'Valentino Dolusan Automotriz', description = 'Compra y venta de autos usados en Chile. Stock seleccionado y asesoría personalizada.' } = Astro.props;
+const {
+  title = 'Valentino Dolusan Automotriz',
+  description = 'Compra y venta de autos usados en Chile. Flota seleccionada y asesoría personalizada.',
+} = Astro.props;
 const base = import.meta.env.BASE_URL;
+const homePath = withBase('/', base).replace(/\/$/, '') || '/';
 ---
 
 <!doctype html>
@@ -17,7 +22,7 @@ const base = import.meta.env.BASE_URL;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#050505" />
-    <link rel="icon" type="image/jpeg" href={`${base}images/brand/logo-valentino.jpg`} />
+    <link rel="icon" type="image/jpeg" href={withBase('/images/brand/logo-valentino.jpg', base)} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -36,15 +41,15 @@ const base = import.meta.env.BASE_URL;
 
     <header class="site-header">
       <div class="site-header__inner">
-        <a class="brand-lockup" href={base} aria-label="Valentino Dolusan Automotriz — inicio">
-          <img src={`${base}images/brand/logo-valentino.webp`} alt="" width="48" height="48" />
+        <a class="brand-lockup" href={withBase('/', base)} aria-label="Valentino Dolusan Automotriz — inicio">
+          <img src={withBase('/images/brand/logo-valentino.webp', base)} alt="" width="48" height="48" />
           <span>Valentino Dolusan</span>
         </a>
         <nav class="site-nav" aria-label="Principal">
-          <a href={`${base}#stock`}>Stock</a>
-          <a href={`${base}#por-que`}>Por qué</a>
-          <a href={`${base}#asistente`}>Asistente</a>
-          <a href={`${base}#contacto`}>Contacto</a>
+          <a href="#flota" data-nav-section="flota">Flota</a>
+          <a href="#por-que" data-nav-section="por-que">Por qué</a>
+          <a href="#asistente" data-nav-section="asistente">Asistente</a>
+          <a href="#contacto" data-nav-section="contacto">Contacto</a>
         </nav>
       </div>
     </header>
@@ -55,6 +60,42 @@ const base = import.meta.env.BASE_URL;
 
     <slot name="footer" />
     <slot name="chat" />
+
+    <script define:vars={{ homePath, base }}>
+      const normalizePath = (path) => {
+        if (!path || path === '/') return homePath || '/';
+        return path.replace(/\/+$/, '') || '/';
+      };
+
+      const scrollToSection = (id) => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', `#${id}`);
+        return true;
+      };
+
+      document.querySelectorAll('[data-nav-section]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const id = link.getAttribute('data-nav-section');
+          if (!id) return;
+          const onHome = normalizePath(window.location.pathname) === normalizePath(homePath);
+          if (onHome && document.getElementById(id)) {
+            event.preventDefault();
+            scrollToSection(id);
+            return;
+          }
+          // Desde fichas u otras rutas: ir al inicio y anclar (sin wipe de transición)
+          event.preventDefault();
+          window.location.href = `${base}#${id}`;
+        });
+      });
+
+      if (window.location.hash) {
+        const id = window.location.hash.slice(1);
+        requestAnimationFrame(() => scrollToSection(id));
+      }
+    </script>
 
     <script>
       import { initPageTransitions } from '../scripts/page-transitions.ts';

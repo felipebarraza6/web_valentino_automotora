@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import inventory from '../data/inventory.json';
-import { formatCLP, prefersReducedMotion, withBase } from './utils';
+import { prefersReducedMotion, withBase } from './utils';
 import { runWipe } from './page-transitions';
 
 type Msg = { role: 'bot' | 'user'; text: string; html?: string };
@@ -37,7 +37,7 @@ function replyFor(input: string): Msg {
   if (/(hola|buenas|hey|saludos)/.test(q)) {
     return {
       role: 'bot',
-      text: `Hola, soy el asistente de ${company.name}. Puedo ayudarte con stock, horarios, ubicación, financiamiento y garantía.`,
+      text: `Hola, soy el asistente de ${company.name}. Puedo ayudarte con la flota, horarios, ubicación, financiamiento y garantía.`,
     };
   }
 
@@ -64,34 +64,32 @@ function replyFor(input: string): Msg {
     };
   }
 
-  if (/(barato|economico|menor|precio bajo)/.test(q)) {
-    const cheapest = [...cars].sort((a, b) => a.precio - b.precio)[0];
+  if (/(precio|vale|cuesta|barato|economico|clp|plata|valor)/.test(q)) {
     return {
       role: 'bot',
-      html: `El más accesible del demo es el <a href="${withBase(`/auto/${cheapest.slug}`, base)}">${cheapest.marca} ${cheapest.modelo} ${cheapest.anio}</a> a ${formatCLP(cheapest.precio)}.`,
-      text: '',
+      text: 'Los valores no se publican en el sitio. Contáctanos por WhatsApp o teléfono y te cotizamos según la unidad.',
     };
   }
 
   const matched = findCars(input);
-  if (matched.length || /(auto|stock|disponible|tienen|catalogo|suv|van|hatch)/.test(q)) {
+  if (matched.length || /(auto|flota|stock|disponible|tienen|catalogo|suv|van|hatch)/.test(q)) {
     const list = (matched.length ? matched : cars).slice(0, 4);
     const links = list
       .map(
         (c) =>
-          `• <a href="${withBase(`/auto/${c.slug}`, base)}">${c.marca} ${c.modelo} ${c.anio}</a> — ${formatCLP(c.precio)} · ${c.km.toLocaleString('es-CL')} km`,
+          `• <a href="${withBase(`/auto/${c.slug}/`, base)}">${c.marca} ${c.modelo} ${c.anio}</a> — ${c.km.toLocaleString('es-CL')} km · ${c.transmision}`,
       )
       .join('<br>');
     return {
       role: 'bot',
-      html: `Esto es lo que encontré en el stock demo:<br>${links}<br><br>¿Quieres detalles de alguno?`,
+      html: `Esto es lo que encontré en la flota:<br>${links}<br><br>¿Quieres detalles de alguno?`,
       text: '',
     };
   }
 
   return {
     role: 'bot',
-    text: 'Puedo ayudarte con stock disponible, horarios, ubicación, financiamiento o garantía. Prueba una de las sugerencias.',
+    text: 'Puedo ayudarte con la flota disponible, horarios, ubicación, financiamiento o garantía. Prueba una de las sugerencias.',
   };
 }
 
@@ -103,7 +101,8 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, className?: string): 
 
 export function initChatWidget(): void {
   const root = document.getElementById('chat-widget');
-  if (!root) return;
+  if (!root || root.dataset.chatReady === '1') return;
+  root.dataset.chatReady = '1';
 
   const launcher = root.querySelector<HTMLButtonElement>('[data-chat-open]')!;
   const panel = root.querySelector<HTMLElement>('[data-chat-panel]')!;
@@ -114,6 +113,7 @@ export function initChatWidget(): void {
   const chips = root.querySelector<HTMLElement>('[data-chat-chips]')!;
 
   let open = false;
+  let animating = false;
 
   const append = (msg: Msg) => {
     const bubble = el('div', `chat-bubble chat-bubble--${msg.role}`);
@@ -149,47 +149,81 @@ export function initChatWidget(): void {
     chips.appendChild(chip);
   });
 
+  const setOpenUi = (isOpen: boolean) => {
+    open = isOpen;
+    panel.classList.toggle('is-open', isOpen);
+    panel.hidden = !isOpen;
+    launcher.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  };
+
   const openPanel = () => {
-    open = true;
-    panel.hidden = false;
-    launcher.setAttribute('aria-expanded', 'true');
+    if (open || animating) return;
+    animating = true;
+    setOpenUi(true);
     if (!prefersReducedMotion()) {
       gsap.fromTo(
         panel,
         { xPercent: 110, opacity: 0.4 },
-        { xPercent: 0, opacity: 1, duration: 0.45, ease: 'power3.out' },
+        {
+          xPercent: 0,
+          opacity: 1,
+          duration: 0.45,
+          ease: 'power3.out',
+          onComplete: () => {
+            animating = false;
+          },
+        },
       );
+    } else {
+      animating = false;
     }
     if (log.childElementCount === 0) {
       append({
         role: 'bot',
-        text: `Hola, soy el asistente virtual de ${inventory.company.name}. Pregúntame por el stock o por información de la automotora.`,
+        text: `Hola, soy el asistente virtual de ${inventory.company.name}. Pregúntame por la flota o por información de la automotora.`,
       });
     }
     input.focus();
   };
 
   const closePanel = () => {
+    if (!open || animating) return;
+    animating = true;
     open = false;
     launcher.setAttribute('aria-expanded', 'false');
-    if (prefersReducedMotion()) {
+
+    const finishClose = () => {
+      panel.classList.remove('is-open');
       panel.hidden = true;
+      gsap.set(panel, { clearProps: 'transform,opacity' });
+      animating = false;
+    };
+
+    if (prefersReducedMotion()) {
+      finishClose();
       return;
     }
+
     gsap.to(panel, {
       xPercent: 110,
       opacity: 0.3,
       duration: 0.35,
       ease: 'power2.in',
-      onComplete: () => {
-        panel.hidden = true;
-        gsap.set(panel, { clearProps: 'all' });
-      },
+      onComplete: finishClose,
     });
   };
 
-  launcher.addEventListener('click', () => (open ? closePanel() : openPanel()));
-  closeBtn.addEventListener('click', closePanel);
+  launcher.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    open ? closePanel() : openPanel();
+  });
+
+  closeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    closePanel();
+  });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -203,6 +237,7 @@ export function initChatWidget(): void {
   document.querySelectorAll('[data-open-chat]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       runWipe(() => openPanel());
     });
   });

@@ -1,5 +1,5 @@
 ---
-import { formatCLP, formatKm } from '../scripts/utils';
+import { formatKm, withBase } from '../scripts/utils';
 
 interface Props {
   slug: string;
@@ -7,23 +7,27 @@ interface Props {
   modelo: string;
   anio: number;
   km: number;
-  precio: number;
   transmision: string;
   image: string;
 }
 
-const { slug, marca, modelo, anio, km, precio, transmision, image } = Astro.props;
+const { slug, marca, modelo, anio, km, transmision, image } = Astro.props;
 const base = import.meta.env.BASE_URL;
 ---
 
-<a class="stock-card glass" href={`${base}auto/${slug}/`} data-tilt>
+<a class="stock-card glass" href={withBase(`/auto/${slug}/`, base)} data-tilt>
   <div class="stock-card__media">
-    <img src={`${base}images/cars/${image}`} alt={`${marca} ${modelo} ${anio}`} loading="lazy" width="640" height="480" />
+    <img
+      src={withBase(`/images/cars/${image}`, base)}
+      alt={`${marca} ${modelo} ${anio}`}
+      loading="lazy"
+      width="640"
+      height="480"
+    />
   </div>
   <div class="stock-card__body">
     <h3>{marca} {modelo}</h3>
     <p class="stock-card__meta">{anio} · {formatKm(km)} · {transmision}</p>
-    <p class="price">{formatCLP(precio)}</p>
   </div>
 </a>
 
@@ -65,10 +69,5 @@ const base = import.meta.env.BASE_URL;
   .stock-card__meta {
     color: var(--text-muted);
     font-size: 0.88rem;
-  }
-
-  .price {
-    margin-top: 0.25rem;
-    font-size: 1.05rem;
   }
 </style>

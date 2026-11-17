@@ -1,35 +1,42 @@
 ---
+import inventory from '../data/inventory.json';
+import { formatKm, withBase } from '../scripts/utils';
+
 const base = import.meta.env.BASE_URL;
+const featured =
+  inventory.cars.find((c) => c.slug === 'dongfeng-joyear-x5-2019') ?? inventory.cars[0];
+const heroPhoto = featured.images[0];
+const detailHref = withBase(`/auto/${featured.slug}/`, base);
 ---
 
 <section class="hero" aria-label="Portada Valentino Dolusan">
   <div class="hero__media" aria-hidden="true">
     <img
       class="hero__photo"
-      src={`${base}images/cars/hero-atmosphere.jpg`}
+      src={withBase(`/images/cars/${heroPhoto}`, base)}
       alt=""
       width="1920"
       height="1080"
       fetchpriority="high"
     />
     <div class="hero__shade"></div>
-    <canvas class="hero__canvas" id="hero-canvas"></canvas>
+    <canvas class="hero__canvas" id="hero-canvas" data-hero-model="joyear-x5"></canvas>
   </div>
 
   <div class="hero__content container">
     <img
       class="hero__logo"
-      src={`${base}images/brand/logo-valentino.webp`}
+      src={withBase('/images/brand/logo-valentino.webp', base)}
       alt="Valentino Dolusan Automotriz"
       width="280"
       height="280"
     />
-    <h1 class="hero__headline">Autos usados con presencia y respaldo</h1>
+    <h1 class="hero__headline">Dongfeng Joyear X5 en flota</h1>
     <p class="hero__support">
-      Selección cuidada, trato directo y acompañamiento claro desde la primera consulta.
+      SUV {featured.anio} · {formatKm(featured.km)} · foto real de la unidad disponible.
     </p>
     <div class="cta-group hero__cta">
-      <a class="btn btn-primary" href="#stock">Ver stock</a>
+      <a class="btn btn-primary" href={detailHref} data-hero-car-link>Ver Joyear X5</a>
       <button class="btn btn-ghost" type="button" data-open-chat>Hablar con el asistente</button>
     </div>
   </div>
@@ -55,26 +62,28 @@ const base = import.meta.env.BASE_URL;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 40%;
-    filter: saturate(1.05) contrast(1.05);
+    object-position: center 45%;
+    filter: saturate(1.06) contrast(1.06);
   }
 
   .hero__shade {
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.25) 35%, rgba(0, 0, 0, 0.82) 100%),
-      radial-gradient(ellipse at 70% 40%, rgba(155, 0, 0, 0.25), transparent 55%);
+      linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 38%, rgba(0, 0, 0, 0.86) 100%),
+      radial-gradient(ellipse at 72% 42%, rgba(155, 0, 0, 0.28), transparent 55%);
   }
 
   .hero__canvas {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.55;
+    right: -4%;
+    top: 8%;
+    width: min(52vw, 640px);
+    height: min(70vh, 560px);
+    opacity: 0.9;
     pointer-events: none;
     mix-blend-mode: screen;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.45));
   }
 
   .hero__content {
@@ -93,14 +102,14 @@ const base = import.meta.env.BASE_URL;
   }
 
   .hero__headline {
-    font-size: clamp(1.85rem, 4.4vw, 3.2rem);
-    max-width: 14ch;
+    font-size: clamp(1.85rem, 4.4vw, 3.05rem);
+    max-width: 16ch;
     text-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
     animation: rise 1s 0.15s var(--ease-out) both;
   }
 
   .hero__support {
-    max-width: 36ch;
+    max-width: 38ch;
     color: #d7d7d7;
     font-size: clamp(1rem, 2vw, 1.15rem);
     animation: rise 1s 0.28s var(--ease-out) both;
@@ -133,6 +142,16 @@ const base = import.meta.env.BASE_URL;
     }
   }
 
+  @media (max-width: 720px) {
+    .hero__canvas {
+      width: min(78vw, 360px);
+      height: min(42vh, 280px);
+      right: -8%;
+      top: 12%;
+      opacity: 0.72;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hero__logo,
     .hero__headline,
@@ -147,7 +166,6 @@ const base = import.meta.env.BASE_URL;
   import { initHero3D } from '../scripts/hero-3d.ts';
   const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement | null;
   if (canvas) {
-    // Lazy: wait until idle / visible
     const start = () => initHero3D(canvas);
     if ('requestIdleCallback' in window) {
       (window as Window & { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(start);

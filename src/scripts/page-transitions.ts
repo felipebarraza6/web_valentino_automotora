@@ -39,10 +39,16 @@ export function runWipe(onMid?: () => void): Promise<void> {
   });
 }
 
+function samePath(a: string, b: string): boolean {
+  const norm = (p: string) => p.replace(/\/+$/, '') || '/';
+  return norm(a) === norm(b);
+}
+
 export function initPageTransitions(): void {
   document.addEventListener('click', (event) => {
     const target = (event.target as HTMLElement).closest('a') as HTMLAnchorElement | null;
     if (!target) return;
+    if (target.hasAttribute('data-nav-section')) return;
 
     const href = target.getAttribute('href');
     if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
@@ -50,7 +56,18 @@ export function initPageTransitions(): void {
 
     const url = new URL(target.href, window.location.href);
     if (url.origin !== window.location.origin) return;
-    if (url.pathname === window.location.pathname && url.hash) return;
+
+    // Same-page anchors: never wipe / never remount content
+    if (url.hash && samePath(url.pathname, window.location.pathname)) {
+      const id = url.hash.slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        event.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', url.hash);
+      }
+      return;
+    }
 
     event.preventDefault();
     runWipe(() => {

@@ -11,7 +11,7 @@
     <header class="chat-panel__head">
       <div>
         <p class="chat-panel__title">Asistente Valentino</p>
-        <p class="chat-panel__sub">Simulación local · stock y FAQ</p>
+        <p class="chat-panel__sub">Simulación local · flota y FAQ</p>
       </div>
       <button type="button" class="chat-panel__close" data-chat-close aria-label="Cerrar chat">×</button>
     </header>
@@ -71,13 +71,23 @@
     }
   }
 
+  /* Author `display` must not defeat [hidden] or the panel reappears after GSAP clearProps */
   .chat-panel {
     width: min(360px, calc(100vw - 1.5rem));
     height: min(520px, calc(100vh - 6rem));
-    display: flex;
+    display: none;
     flex-direction: column;
     padding: 0.9rem;
     background: linear-gradient(160deg, rgba(18, 18, 18, 0.95), rgba(40, 0, 0, 0.72));
+  }
+
+  .chat-panel.is-open,
+  .chat-panel:not([hidden]) {
+    display: flex;
+  }
+
+  .chat-panel[hidden] {
+    display: none !important;
   }
 
   .chat-panel__head {

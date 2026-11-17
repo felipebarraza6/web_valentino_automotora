@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Footer from '../../components/Footer.astro';
 import ChatWidget from '../../components/ChatWidget.astro';
 import inventory from '../../data/inventory.json';
-import { formatCLP, formatKm } from '../../scripts/utils';
+import { formatKm, withBase } from '../../scripts/utils';
 
 export function getStaticPaths() {
   return inventory.cars.map((car) => ({
@@ -21,7 +21,7 @@ const title = `${car.marca} ${car.modelo} ${car.anio} | Valentino Dolusan`;
   <article class="detail">
     <div class="detail__hero">
       <img
-        src={`${base}images/cars/${car.images[0]}`}
+        src={withBase(`/images/cars/${car.images[0]}`, base)}
         alt={`${car.marca} ${car.modelo}`}
         width="1200"
         height="800"
@@ -31,16 +31,15 @@ const title = `${car.marca} ${car.modelo} ${car.anio} | Valentino Dolusan`;
     </div>
 
     <div class="container detail__content">
-      <a class="detail__back" href={`${base}#stock`}>← Volver al stock</a>
+      <a class="detail__back" href={withBase('/#flota', base)}>← Volver a la flota</a>
       <p class="section-kicker">Ficha demo</p>
       <h1 class="detail__title">{car.marca} {car.modelo}</h1>
       <p class="detail__sub">{car.anio} · {formatKm(car.km)} · {car.transmision} · {car.combustible} · {car.color}</p>
-      <p class="price detail__price">{formatCLP(car.precio)}</p>
       <p class="detail__desc">{car.descripcion}</p>
 
       <div class="cta-group" style="margin-top: 1.5rem;">
         <button class="btn btn-primary" type="button" data-open-chat>Consultar al asistente</button>
-        <a class="btn btn-ghost" href={`${base}#contacto`}>Contacto</a>
+        <a class="btn btn-ghost" href={withBase('/#contacto', base)}>Contacto</a>
       </div>
 
       {
@@ -51,7 +50,7 @@ const title = `${car.marca} ${car.modelo} ${car.anio} | Valentino Dolusan`;
               {car.images.map((img, i) => (
                 <figure class="glass">
                   <img
-                    src={`${base}images/cars/${img}`}
+                    src={withBase(`/images/cars/${img}`, base)}
                     alt={`${car.marca} ${car.modelo} — foto ${i + 1}`}
                     loading="lazy"
                     width="640"
@@ -109,11 +108,6 @@ const title = `${car.marca} ${car.modelo} ${car.anio} | Valentino Dolusan`;
 
   .detail__sub {
     color: var(--text-muted);
-  }
-
-  .detail__price {
-    margin-top: 1rem;
-    font-size: 1.45rem;
   }
 
   .detail__desc {

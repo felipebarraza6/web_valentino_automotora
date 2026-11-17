@@ -1,5 +1,6 @@
 ---
 import inventory from '../data/inventory.json';
+import { withBase } from '../scripts/utils';
 const base = import.meta.env.BASE_URL;
 const year = new Date().getFullYear();
 ---
@@ -7,7 +8,7 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container site-footer__inner">
     <div class="site-footer__brand">
-      <img src={`${base}images/brand/logo-valentino.webp`} alt="" width="56" height="56" />
+      <img src={withBase('/images/brand/logo-valentino.webp', base)} alt="" width="56" height="56" />
       <div>
         <p class="site-footer__name">{inventory.company.name}</p>
         <p class="muted">{inventory.company.tagline}</p>
