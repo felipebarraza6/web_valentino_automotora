@@ -12,10 +12,19 @@ import ReviewHint from './ReviewHint.astro';
       data-chat-open
       aria-expanded="false"
       aria-controls="chat-panel"
+      aria-label="Hablar con Valentino"
+      title="Hablar con Valentino"
     >
-      Valentino
+      <svg class="chat-launcher__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+        <path
+          fill="currentColor"
+          d="M4.5 4.75A2.75 2.75 0 0 1 7.25 2h9.5A2.75 2.75 0 0 1 19.5 4.75v8.5A2.75 2.75 0 0 1 16.75 16H12.4l-3.52 3.08A.9.9 0 0 1 7.4 18.4V16H7.25A2.75 2.75 0 0 1 4.5 13.25v-8.5Zm2.75-.75c-.69 0-1.25.56-1.25 1.25v8.5c0 .69.56 1.25 1.25 1.25h1.15c.5 0 .9.4.9.9v1.38l2.22-1.94a.9.9 0 0 1 .59-.22h4.44c.69 0 1.25-.56 1.25-1.25v-8.5c0-.69-.56-1.25-1.25-1.25h-9.5Z"
+        ></path>
+        <circle cx="9" cy="9" r="1" fill="currentColor"></circle>
+        <circle cx="12" cy="9" r="1" fill="currentColor"></circle>
+        <circle cx="15" cy="9" r="1" fill="currentColor"></circle>
+      </svg>
     </button>
-    <span class="chat-launcher__divider" aria-hidden="true"></span>
     <ReviewHint
       id="chat-valentino"
       variant="fab"
@@ -47,7 +56,7 @@ import ReviewHint from './ReviewHint.astro';
   .chat-widget {
     position: fixed;
     right: 1.1rem;
-    bottom: calc(1.1rem + var(--mobile-action-bar-h, 0px));
+    bottom: 1.1rem;
     z-index: 60;
     display: flex;
     flex-direction: column;
@@ -59,17 +68,18 @@ import ReviewHint from './ReviewHint.astro';
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 0;
-    min-height: 52px;
-    padding: 0.2rem 0.35rem 0.2rem 0.15rem;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    padding: 0;
     border: 1px solid rgba(232, 232, 232, 0.35);
-    border-radius: 999px;
+    border-radius: 50%;
     background: linear-gradient(135deg, rgba(20, 20, 20, 0.92), rgba(80, 0, 0, 0.58));
     backdrop-filter: blur(18px) saturate(140%);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.14),
-      0 0 0 0 rgba(196, 16, 16, 0.35);
+      0 10px 28px rgba(0, 0, 0, 0.45);
     overflow: visible;
     animation: launcher-float 3.6s ease-in-out infinite;
   }
@@ -77,33 +87,28 @@ import ReviewHint from './ReviewHint.astro';
   .chat-launcher {
     position: relative;
     z-index: 1;
-    min-height: 44px;
-    padding: 0.7rem 1.05rem 0.7rem 1.15rem;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 0;
     border: 0;
-    border-radius: 999px;
+    border-radius: 50%;
     background: transparent;
     color: #fff;
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
     cursor: pointer;
   }
 
-  .chat-launcher__divider {
-    position: relative;
-    z-index: 1;
-    width: 1px;
-    align-self: stretch;
-    margin: 0.55rem 0.2rem;
-    background: rgba(232, 232, 232, 0.28);
+  .chat-launcher__icon {
+    display: block;
   }
 
   .chat-launcher-wrap :global(.review-hint) {
-    position: relative;
-    z-index: 1;
-    margin-left: 0;
-    padding: 0 0.45rem 0 0.35rem;
+    position: absolute;
+    top: -0.15rem;
+    right: -0.15rem;
+    z-index: 2;
+    margin: 0;
   }
 
   .chat-launcher__glow {

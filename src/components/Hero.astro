@@ -4,6 +4,8 @@ import path from 'node:path';
 import { withBase } from '../scripts/utils';
 
 const base = import.meta.env.BASE_URL;
+const creditoHref = withBase('/credito/', base);
+const venderHref = withBase('/vender/', base);
 const carsDir = path.join(process.cwd(), 'public/images/cars');
 const carPhotos = fs
   .readdirSync(carsDir)
@@ -57,7 +59,8 @@ const strips = Array.from({ length: stripCount }, (_, i) =>
     </p>
     <div class="cta-group hero__cta">
       <a class="btn btn-primary" href="#flota">Ver flota</a>
-      <button class="btn btn-ghost" type="button" data-open-chat>Hablar con Valentino</button>
+      <a class="btn btn-primary hero__cta-action" href={creditoHref}>Obtén tu crédito en 5 minutos</a>
+      <a class="btn btn-ghost hero__cta-action" href={venderHref}>Deja tu vehículo a consignación</a>
     </div>
   </div>
 </section>
@@ -174,6 +177,15 @@ const strips = Array.from({ length: stripCount }, (_, i) =>
     animation: rise 1s 0.36s var(--ease-out) both;
   }
 
+  .hero__cta-action {
+    text-transform: none;
+    letter-spacing: 0.04em;
+    font-size: 0.72rem;
+    line-height: 1.25;
+    text-align: center;
+    max-width: 100%;
+  }
+
   @keyframes hero-marquee {
     from {
       transform: translateX(0);
@@ -195,6 +207,10 @@ const strips = Array.from({ length: stripCount }, (_, i) =>
   }
 
   @media (max-width: 720px) {
+    .hero {
+      padding-bottom: 2.75rem;
+    }
+
     .hero__shot {
       width: min(58vw, 240px);
     }
@@ -202,6 +218,21 @@ const strips = Array.from({ length: stripCount }, (_, i) =>
     .hero__collage {
       gap: 0.55rem;
       transform: rotate(-1.5deg) scale(1.12);
+    }
+
+    .hero__cta {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      width: 100%;
+      max-width: 22rem;
+    }
+
+    .hero__cta .btn {
+      width: 100%;
+      min-height: 48px;
+      padding-inline: 1rem;
+      white-space: normal;
     }
   }
 

@@ -17,7 +17,6 @@
   --font-body: "Manrope", "Segoe UI", sans-serif;
   --radius: 18px;
   --nav-h: 72px;
-  --mobile-action-bar-h: 0px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --base: /web_valentino_automotora/;
 }
@@ -280,15 +279,6 @@ p {
 @media (max-width: 720px) {
   .site-nav {
     display: none;
-  }
-
-  :root {
-    /* Approx. bar height (two CTAs + padding) + iOS home indicator */
-    --mobile-action-bar-h: calc(4.85rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  body {
-    padding-bottom: var(--mobile-action-bar-h);
   }
 }
 
